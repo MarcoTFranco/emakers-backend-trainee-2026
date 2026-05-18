@@ -1,5 +1,6 @@
 package com.emakers.library_api.models;
 
+import com.emakers.library_api.dto.BookRecordDto;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -22,10 +23,43 @@ public class BookModel implements Serializable {
 
     public BookModel() {}
 
-    public BookModel(UUID id, String title, String author, String date) {
-        this.id = id;
+    public BookModel(BookRecordDto bookRecordDto) {
+        this.title = bookRecordDto.title();
+        this.author = bookRecordDto.author();
+        this.date = bookRecordDto.date();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    private void setTitle(String title) {
         this.title = title;
+    }
+
+    private void setAuthor(String author) {
         this.author = author;
+    }
+
+    private void setDate(String date) {
         this.date = date;
+    }
+
+    public void updateBook(BookRecordDto bookRecordDto) {
+        setTitle(bookRecordDto.title());
+        setAuthor(bookRecordDto.author());
+        setDate(bookRecordDto.date());
     }
 }
