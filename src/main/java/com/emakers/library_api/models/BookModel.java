@@ -19,22 +19,22 @@ public class BookModel implements Serializable {
 
     private String author;
 
-    private String date;
+    private String publicationDate;
 
     public BookModel() {}
 
     public BookModel(BookRecordDto bookRecordDto) {
         this.title = bookRecordDto.title();
         this.author = bookRecordDto.author();
-        this.date = bookRecordDto.date();
+        this.publicationDate = bookRecordDto.publicationDate();
     }
 
     public UUID getId() {
         return id;
     }
 
-    public String getDate() {
-        return date;
+    public String getPublicationDate() {
+        return publicationDate;
     }
 
     public String getAuthor() {
@@ -53,13 +53,13 @@ public class BookModel implements Serializable {
         this.author = author;
     }
 
-    private void setDate(String date) {
-        this.date = date;
+    private void setPublicationDate(String publicationDate) {
+        this.publicationDate = publicationDate;
     }
 
     public void updateBook(BookRecordDto bookRecordDto) {
         setTitle(bookRecordDto.title());
         setAuthor(bookRecordDto.author());
-        setDate(bookRecordDto.date());
+        setPublicationDate(bookRecordDto.publicationDate());
     }
 }
