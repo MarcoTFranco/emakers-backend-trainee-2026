@@ -1,0 +1,6 @@
+CREATE TABLE TB_BOOKS (
+    id UUID PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    publication_date VARCHAR(100) NOT NULL
+);
