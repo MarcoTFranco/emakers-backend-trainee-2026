@@ -1,0 +1,8 @@
+CREATE TABLE TB_PERSON (
+    id UUID PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    cpf CHAR(11) NOT NULL,
+    zip_code CHAR(9) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL
+);
