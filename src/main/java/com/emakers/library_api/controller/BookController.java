@@ -46,9 +46,9 @@ public class BookController {
         if(bookModel.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book Not Found");
         }
-        var newBook = bookModel.get();
-        newBook.updateBook(bookRecordDto);
-        return ResponseEntity.status(HttpStatus.OK).body(bookRepository.save(newBook));
+        var bookUpdate = bookModel.get();
+        bookUpdate.updateBook(bookRecordDto);
+        return ResponseEntity.status(HttpStatus.OK).body(bookRepository.save(bookUpdate));
     }
 
     @DeleteMapping("/books/{id}")

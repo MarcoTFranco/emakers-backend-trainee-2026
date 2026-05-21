@@ -2,6 +2,7 @@ package com.emakers.library_api.models;
 
 import com.emakers.library_api.dto.PersonRecordDto;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -59,5 +60,31 @@ public class PersonModel implements Serializable {
 
     public String getPassword() {
         return password;
+    }
+
+    private void setName(String name) {
+        this.name = name;
+    }
+    private void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+    private void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    private void setEmail(String email) {
+        this.email = email;
+    }
+
+    private void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void updatePerson(@Valid PersonRecordDto personRecordDto) {
+        this.name = personRecordDto.name();
+        this.cpf = personRecordDto.cpf();
+        this.zipCode = personRecordDto.zipCode();
+        this.email = personRecordDto.email();
+        this.password = personRecordDto.password();
     }
 }
