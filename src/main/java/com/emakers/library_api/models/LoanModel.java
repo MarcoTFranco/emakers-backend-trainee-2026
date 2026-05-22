@@ -6,8 +6,8 @@ import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-@Table(name = "TB_EMPRESTIMOS")
-public class EmprestimoModel implements Serializable {
+@Table(name = "TB_LOANS")
+public class LoanModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,10 +23,10 @@ public class EmprestimoModel implements Serializable {
     @JoinColumn(name = "person_id")
     private PersonModel person;
 
-    public EmprestimoModel() {
+    public LoanModel() {
     }
 
-    public EmprestimoModel(PersonModel person, BookModel book) {
+    public LoanModel(PersonModel person, BookModel book) {
         this.person = person;
         this.book = book;
     }
