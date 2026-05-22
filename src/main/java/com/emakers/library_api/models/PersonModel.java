@@ -65,9 +65,11 @@ public class PersonModel implements Serializable {
     private void setName(String name) {
         this.name = name;
     }
+
     private void setCpf(String cpf) {
         this.cpf = cpf;
     }
+
     private void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }

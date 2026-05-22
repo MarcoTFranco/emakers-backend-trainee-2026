@@ -1,0 +1,8 @@
+CREATE TABLE TB_LOANS (
+    id UUID PRIMARY KEY,
+    book_id UUID NOT NULL,
+    person_id UUID NOT NULL,
+
+    FOREIGN KEY (book_id) REFERENCES TB_BOOKS(id),
+    FOREIGN KEY (person_id) REFERENCES TB_PERSON(id)
+);
