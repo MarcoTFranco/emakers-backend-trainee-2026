@@ -23,6 +23,8 @@ public class LoanModel implements Serializable {
     @JoinColumn(name = "person_id")
     private PersonModel person;
 
+    private Boolean active;
+
     public LoanModel() {
     }
 
@@ -49,6 +51,10 @@ public class LoanModel implements Serializable {
 
     public void setPerson(PersonModel person) {
         this.person = person;
+    }
+
+    public void deleteThisLoan() {
+        this.active = false;
     }
 
 }
