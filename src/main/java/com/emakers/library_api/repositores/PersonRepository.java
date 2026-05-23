@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 public interface PersonRepository extends JpaRepository<PersonModel, UUID> {
-    PersonModel findByCpf(@NotBlank String cpf);
+    PersonModel findByCpf(String cpf);
 }
