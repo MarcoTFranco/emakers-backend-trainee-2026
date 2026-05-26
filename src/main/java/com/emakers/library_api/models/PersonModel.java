@@ -3,6 +3,8 @@ package com.emakers.library_api.models;
 import com.emakers.library_api.dto.PersonRecordDto;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -27,6 +29,9 @@ public class PersonModel implements Serializable {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     public PersonModel() {
     }
 
@@ -35,7 +40,8 @@ public class PersonModel implements Serializable {
         this.cpf = personRecordDto.cpf();
         this.zipCode = personRecordDto.zipCode();
         this.email = personRecordDto.email();
-        this.password = personRecordDto.password();
+        this.password = new BCryptPasswordEncoder().encode(personRecordDto.password());
+        this.role = UserRole.USER;
     }
 
     public UUID getId() {
@@ -62,24 +68,12 @@ public class PersonModel implements Serializable {
         return password;
     }
 
-    private void setName(String name) {
-        this.name = name;
+    public UserRole getRole() {
+        return role;
     }
 
-    private void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    private void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
-    }
-
-    private void setEmail(String email) {
-        this.email = email;
-    }
-
-    private void setPassword(String password) {
-        this.password = password;
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     public void updatePerson(@Valid PersonRecordDto personRecordDto) {
@@ -87,6 +81,6 @@ public class PersonModel implements Serializable {
         this.cpf = personRecordDto.cpf();
         this.zipCode = personRecordDto.zipCode();
         this.email = personRecordDto.email();
-        this.password = personRecordDto.password();
+        this.password = new BCryptPasswordEncoder().encode(personRecordDto.password());
     }
 }

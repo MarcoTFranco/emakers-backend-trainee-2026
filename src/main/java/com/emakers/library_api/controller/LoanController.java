@@ -1,7 +1,9 @@
 package com.emakers.library_api.controller;
 
 import com.emakers.library_api.dto.LoanRecordDto;
+import com.emakers.library_api.models.BookModel;
 import com.emakers.library_api.models.LoanModel;
+import com.emakers.library_api.models.PersonModel;
 import com.emakers.library_api.repositores.BookRepository;
 import com.emakers.library_api.repositores.LoanRepository;
 import com.emakers.library_api.repositores.PersonRepository;
@@ -32,12 +34,13 @@ public class LoanController {
             " vinculando uma pessoa e um livro utilizando o CPF e o título do livro.")
     @PostMapping("/loans")
     public ResponseEntity<Object> bookLoan (@RequestBody LoanRecordDto loanRecordDto) {
-        var bookModel = bookRepository.findByTitle(loanRecordDto.title());
-        var personModel = personRepository.findByCpf(loanRecordDto.cpf());
-        if (bookModel == null || personModel == null) {
+
+        Optional<BookModel> bookModel = bookRepository.findByTitle(loanRecordDto.title());
+        Optional<PersonModel> personModel = personRepository.findByCpf(loanRecordDto.cpf());
+        if (bookModel.isEmpty() || personModel.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("One or more information is invalid");
         }
-        var loanModel = new LoanModel(personModel, bookModel);
+        var loanModel = new LoanModel(personModel.get(), bookModel.get());
         return ResponseEntity.status(HttpStatus.CREATED).body(loanRepository.save(loanModel));
     }
 

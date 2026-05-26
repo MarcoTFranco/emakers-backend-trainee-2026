@@ -2,6 +2,7 @@ package com.emakers.library_api.controller;
 
 import com.emakers.library_api.dto.PersonRecordDto;
 import com.emakers.library_api.models.PersonModel;
+import com.emakers.library_api.models.UserRole;
 import com.emakers.library_api.repositores.PersonRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,9 +24,18 @@ public class PersonController {
     @Autowired
     private PersonRepository personRepository;
 
+    @Operation(summary = "Cadastra um novo Administrador", description = "Rota exclusiva para admins criarem" +
+            " outros usuários com privilégios de administrador.")
+    @PostMapping("/users/admin")
+    public ResponseEntity<PersonModel> saveAdmin(@RequestBody @Valid PersonRecordDto personRecordDto) {
+        var personModel = new PersonModel(personRecordDto);
+        personModel.setRole(UserRole.ADMIN);
+        return ResponseEntity.status(HttpStatus.CREATED).body(personRepository.save(personModel));
+    }
+
     @Operation(summary = "Cadastra um novo usuário", description = "Salva as informações de uma nova" +
             " pessoa no banco de dados.")
-    @PostMapping("/user")
+    @PostMapping("/users")
     public ResponseEntity<PersonModel> savePerson(@RequestBody @Valid PersonRecordDto personRecordDto) {
         var personModel = new PersonModel(personRecordDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(personRepository.save(personModel));
@@ -32,14 +43,14 @@ public class PersonController {
 
     @Operation(summary = "Lista todos os usuários", description = "Retorna uma lista contendo todas" +
             " as pessoas cadastradas.")
-    @GetMapping("/user")
+    @GetMapping("/users")
     public ResponseEntity<List<PersonModel>> getAllPersons() {
         return ResponseEntity.status(HttpStatus.OK).body(personRepository.findAll());
     }
 
     @Operation(summary = "Busca um usuário pelo ID", description = "Retorna os detalhes de uma pessoa" +
             " específica utilizando o seu UUID.")
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<Object> getPersonById(@PathVariable(value = "id") UUID id) {
         Optional<PersonModel> personModel = personRepository.findById(id);
         if (personModel.isEmpty()) {
@@ -50,21 +61,29 @@ public class PersonController {
 
     @Operation(summary = "Atualiza um usuário", description = "Atualiza as informações de uma pessoa" +
             " existente com base no ID fornecido.")
-    @PutMapping("/user/{id}")
+    @PutMapping("/users/{id}")
     public ResponseEntity<Object> updatePerson(@PathVariable(value = "id") UUID id,
-                                               @RequestBody @Valid PersonRecordDto personRecordDto) {
-        Optional<PersonModel> personModel = personRepository.findById(id);
-        if (personModel.isEmpty()) {
+                                               @RequestBody @Valid PersonRecordDto personRecordDto,
+                                               Authentication authentication) {
+        Optional<PersonModel> personModelOptional = personRepository.findById(id);
+        if (personModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person Not Found");
         }
-        PersonModel personUpdate = personModel.get();
-        personUpdate.updatePerson(personRecordDto);
-        return ResponseEntity.status(HttpStatus.OK).body(personRepository.save(personUpdate));
+        PersonModel personDoBanco = personModelOptional.get();
+        String usuarioLogadoEmail = authentication.getName();
+        boolean isNotOwner = !usuarioLogadoEmail.equals(personDoBanco.getEmail());
+        boolean isNotAdmin = authentication.getAuthorities().stream()
+                .noneMatch(a -> a.getAuthority().equals("SCOPE_ADMIN"));
+        if (isNotOwner && isNotAdmin) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only change your own data!");
+        }
+        personDoBanco.updatePerson(personRecordDto);
+        return ResponseEntity.status(HttpStatus.OK).body(personRepository.save(personDoBanco));
     }
 
     @Operation(summary = "Deleta um usuário", description = "Remove permanentemente uma pessoa do banco" +
             " de dados pelo seu ID.")
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<Object> deletePerson(@PathVariable(value = "id") UUID id) {
         Optional<PersonModel> personModel = personRepository.findById(id);
         if (personModel.isEmpty()) {
