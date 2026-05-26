@@ -5,6 +5,8 @@ import com.emakers.library_api.models.LoanModel;
 import com.emakers.library_api.repositores.BookRepository;
 import com.emakers.library_api.repositores.LoanRepository;
 import com.emakers.library_api.repositores.PersonRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Loans", description = "Endpoints para gerenciamento de empréstimos e devoluções")
 public class LoanController {
 
     @Autowired
@@ -25,7 +28,9 @@ public class LoanController {
     @Autowired
     private PersonRepository personRepository;
 
-    @PostMapping("/loan")
+    @Operation(summary = "Realiza o empréstimo de um livro", description = "Cria um novo registro de empréstimo" +
+            " vinculando uma pessoa e um livro utilizando o CPF e o título do livro.")
+    @PostMapping("/loans")
     public ResponseEntity<Object> bookLoan (@RequestBody LoanRecordDto loanRecordDto) {
         var bookModel = bookRepository.findByTitle(loanRecordDto.title());
         var personModel = personRepository.findByCpf(loanRecordDto.cpf());
@@ -33,10 +38,12 @@ public class LoanController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("One or more information is invalid");
         }
         var loanModel = new LoanModel(personModel, bookModel);
-        return ResponseEntity.status(HttpStatus.OK).body(loanRepository.save(loanModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanRepository.save(loanModel));
     }
 
-    @DeleteMapping("/loan/{id}")
+    @Operation(summary = "Realiza a devolução de um livro", description = "Encerra um empréstimo ativo alterando seu" +
+            " status para inativo (soft delete) com base no ID do empréstimo.")
+    @DeleteMapping("/loans/{id}")
     public ResponseEntity<String> deleteLoan(@PathVariable(value = "id") UUID id) {
         Optional<LoanModel> loanModel = loanRepository.findByIdAndActiveTrue(id);
         if (loanModel.isEmpty()) {
