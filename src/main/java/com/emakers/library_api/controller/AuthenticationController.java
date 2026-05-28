@@ -4,7 +4,6 @@ import com.emakers.library_api.dto.request.LoginRecordDto;
 import com.emakers.library_api.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,11 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Authentication", description = "Endpoints para autenticação e geração de tokens JWT")
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
+
+    public AuthenticationController(AuthenticationManager authenticationManager, AuthenticationService authenticationService) {
+        this.authenticationManager = authenticationManager;
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping("/authenticate")
     @Operation(summary = "Realiza o login do usuário", description = "Recebe as credenciais (e-mail e senha)" +
