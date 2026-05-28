@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -49,16 +50,16 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private void seedBooks() {
         if (bookRepository.count() == 0) {
-            BookRecordDto book1Dto = new BookRecordDto("Código Limpo", "Robert C. Martin", "2008/08/01");
+            BookRecordDto book1Dto = new BookRecordDto("Código Limpo", "Robert C. Martin", LocalDate.parse("2008-08-01"));
             BookModel book1 = new BookModel(book1Dto);
 
-            BookRecordDto book2Dto = new BookRecordDto("Arquitetura Limpa", "Robert C. Martin", "2017/09/10");
+            BookRecordDto book2Dto = new BookRecordDto("Arquitetura Limpa", "Robert C. Martin", LocalDate.parse("2017-09-10"));
             BookModel book2 = new BookModel(book2Dto);
 
-            BookRecordDto book3Dto = new BookRecordDto("O Programador Pragmático", "Andrew Hunt", "1999/10/20");
+            BookRecordDto book3Dto = new BookRecordDto("O Programador Pragmático", "Andrew Hunt", LocalDate.parse("1999-10-20"));
             BookModel book3 = new BookModel(book3Dto);
 
-            BookRecordDto book4Dto = new BookRecordDto("Domain-Driven Design", "Eric Evans", "2003/08/20");
+            BookRecordDto book4Dto = new BookRecordDto("Domain-Driven Design", "Eric Evans", LocalDate.parse("2003-08-20"));
             BookModel book4 = new BookModel(book4Dto);
 
             bookRepository.saveAll(List.of(book1, book2, book3, book4));

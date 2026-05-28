@@ -4,6 +4,7 @@ import com.emakers.library_api.dto.request.BookRecordDto;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -19,7 +20,7 @@ public class BookModel implements Serializable {
 
     private String author;
 
-    private String publicationDate;
+    private LocalDate publicationDate;
 
     public BookModel() {}
 
@@ -33,7 +34,7 @@ public class BookModel implements Serializable {
         return id;
     }
 
-    public String getPublicationDate() {
+    public LocalDate getPublicationDate() {
         return publicationDate;
     }
 
@@ -45,21 +46,10 @@ public class BookModel implements Serializable {
         return title;
     }
 
-    private void setTitle(String title) {
-        this.title = title;
-    }
-
-    private void setAuthor(String author) {
-        this.author = author;
-    }
-
-    private void setPublicationDate(String publicationDate) {
-        this.publicationDate = publicationDate;
-    }
 
     public void updateBook(BookRecordDto bookRecordDto) {
-        setTitle(bookRecordDto.title());
-        setAuthor(bookRecordDto.author());
-        setPublicationDate(bookRecordDto.publicationDate());
+        this.title =  bookRecordDto.title();
+        this.author = bookRecordDto.author();
+        this.publicationDate = bookRecordDto.publicationDate();
     }
 }
