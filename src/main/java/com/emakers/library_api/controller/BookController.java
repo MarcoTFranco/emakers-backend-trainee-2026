@@ -1,6 +1,6 @@
 package com.emakers.library_api.controller;
 
-import com.emakers.library_api.dto.BookRecordDto;
+import com.emakers.library_api.dto.request.BookRecordDto;
 import com.emakers.library_api.models.BookModel;
 import com.emakers.library_api.repositores.BookRepository;
 import io.swagger.v3.oas.annotations.Operation;

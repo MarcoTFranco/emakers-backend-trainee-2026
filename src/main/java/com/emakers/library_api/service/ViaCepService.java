@@ -1,6 +1,6 @@
 package com.emakers.library_api.service;
 
-import com.emakers.library_api.dto.ViaCepResponseDto;
+import com.emakers.library_api.dto.response.ViaCepResponseDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

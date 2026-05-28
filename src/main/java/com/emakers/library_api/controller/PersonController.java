@@ -1,7 +1,8 @@
 package com.emakers.library_api.controller;
 
-import com.emakers.library_api.dto.PersonRecordDto;
-import com.emakers.library_api.dto.ViaCepResponseDto;
+import com.emakers.library_api.dto.request.PersonRecordDto;
+import com.emakers.library_api.dto.response.PersonResponseDto;
+import com.emakers.library_api.dto.response.ViaCepResponseDto;
 import com.emakers.library_api.models.PersonModel;
 import com.emakers.library_api.models.UserRole;
 import com.emakers.library_api.repositores.PersonRepository;
@@ -32,10 +33,11 @@ public class PersonController {
     @Operation(summary = "Cadastra um novo Administrador", description = "Rota exclusiva para admins criarem" +
             " outros usuários com privilégios de administrador.")
     @PostMapping("/users/admin")
-    public ResponseEntity<PersonModel> saveAdmin(@RequestBody @Valid PersonRecordDto personRecordDto) {
+    public ResponseEntity<PersonResponseDto> saveAdmin(@RequestBody @Valid PersonRecordDto personRecordDto) {
         var personModel = new PersonModel(personRecordDto);
         personModel.setRole(UserRole.ADMIN);
-        return ResponseEntity.status(HttpStatus.CREATED).body(personRepository.save(personModel));
+        PersonResponseDto personResponseDto = new PersonResponseDto(personRepository.save(personModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(personResponseDto);
     }
 
     @Operation(summary = "Cadastra um novo usuário", description = "Salva as informações de uma nova" +
@@ -50,16 +52,19 @@ public class PersonController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
         var personModel = new PersonModel(personRecordDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(personRepository.save(personModel));
+        var personResponseDto = new PersonResponseDto(personRepository.save(personModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(personResponseDto);
     }
 
     @Operation(summary = "Lista todos os usuários", description = "Retorna uma lista contendo todas" +
             " as pessoas cadastradas.")
     @GetMapping("/users")
-    public ResponseEntity<List<PersonModel>> getAllPersons() {
-        return ResponseEntity.status(HttpStatus.OK).body(personRepository.findAll());
+    public ResponseEntity<List<PersonResponseDto>> getAllPersons() {
+        List<PersonResponseDto> personResponseDtos = personRepository.findAll().stream()
+                .map(PersonResponseDto::new)
+                .toList();
+        return ResponseEntity.status(HttpStatus.OK).body(personResponseDtos);
     }
 
     @Operation(summary = "Busca um usuário pelo ID", description = "Retorna os detalhes de uma pessoa" +
@@ -70,7 +75,8 @@ public class PersonController {
         if (personModel.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Person Not Found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(personModel.get());
+        PersonResponseDto personResponseDto = new PersonResponseDto(personModel.get());
+        return ResponseEntity.status(HttpStatus.OK).body(personResponseDto);
     }
 
     @Operation(summary = "Atualiza um usuário", description = "Atualiza as informações de uma pessoa" +
@@ -92,7 +98,8 @@ public class PersonController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only change your own data!");
         }
         personDoBanco.updatePerson(personRecordDto);
-        return ResponseEntity.status(HttpStatus.OK).body(personRepository.save(personDoBanco));
+        PersonResponseDto personResponseDto = new PersonResponseDto(personRepository.save(personDoBanco));
+        return ResponseEntity.status(HttpStatus.OK).body(personResponseDto);
     }
 
     @Operation(summary = "Deleta um usuário", description = "Remove permanentemente uma pessoa do banco" +

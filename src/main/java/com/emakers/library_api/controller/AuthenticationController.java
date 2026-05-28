@@ -1,6 +1,6 @@
 package com.emakers.library_api.controller;
 
-import com.emakers.library_api.models.LoginRecordDto;
+import com.emakers.library_api.dto.request.LoginRecordDto;
 import com.emakers.library_api.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

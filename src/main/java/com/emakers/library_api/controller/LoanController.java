@@ -1,6 +1,7 @@
 package com.emakers.library_api.controller;
 
-import com.emakers.library_api.dto.LoanRecordDto;
+import com.emakers.library_api.dto.request.LoanRecordDto;
+import com.emakers.library_api.dto.response.LoanResponseDto;
 import com.emakers.library_api.models.BookModel;
 import com.emakers.library_api.models.LoanModel;
 import com.emakers.library_api.models.PersonModel;
@@ -41,7 +42,8 @@ public class LoanController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("One or more information is invalid");
         }
         var loanModel = new LoanModel(personModel.get(), bookModel.get());
-        return ResponseEntity.status(HttpStatus.CREATED).body(loanRepository.save(loanModel));
+        var loanResponse = new LoanResponseDto(loanRepository.save(loanModel));
+        return ResponseEntity.status(HttpStatus.CREATED).body(loanResponse);
     }
 
     @Operation(summary = "Realiza a devolução de um livro", description = "Encerra um empréstimo ativo alterando seu" +

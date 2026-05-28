@@ -1,7 +1,7 @@
 package com.emakers.library_api.config;
 
-import com.emakers.library_api.dto.BookRecordDto;
-import com.emakers.library_api.dto.PersonRecordDto;
+import com.emakers.library_api.dto.request.BookRecordDto;
+import com.emakers.library_api.dto.request.PersonRecordDto;
 import com.emakers.library_api.models.BookModel;
 import com.emakers.library_api.models.PersonModel;
 import com.emakers.library_api.models.UserRole;

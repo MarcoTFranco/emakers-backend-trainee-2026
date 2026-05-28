@@ -1,6 +1,4 @@
-package com.emakers.library_api.dto;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.emakers.library_api.dto.response;
 
 public record ViaCepResponseDto(
         String cep,

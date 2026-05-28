@@ -1,6 +1,6 @@
 package com.emakers.library_api.models;
 
-import com.emakers.library_api.dto.BookRecordDto;
+import com.emakers.library_api.dto.request.BookRecordDto;
 import jakarta.persistence.*;
 
 import java.io.Serializable;

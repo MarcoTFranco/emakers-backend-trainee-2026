@@ -31,6 +31,7 @@ public class LoanModel implements Serializable {
     public LoanModel(PersonModel person, BookModel book) {
         this.person = person;
         this.book = book;
+        active = true;
     }
 
     public UUID getId() {
@@ -45,12 +46,8 @@ public class LoanModel implements Serializable {
         return person;
     }
 
-    public void setBook(BookModel book) {
-        this.book = book;
-    }
-
-    public void setPerson(PersonModel person) {
-        this.person = person;
+    public Boolean getActive() {
+        return active;
     }
 
     public void deleteThisLoan() {
