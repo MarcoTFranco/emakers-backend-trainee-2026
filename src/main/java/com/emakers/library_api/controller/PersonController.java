@@ -1,9 +1,11 @@
 package com.emakers.library_api.controller;
 
 import com.emakers.library_api.dto.PersonRecordDto;
+import com.emakers.library_api.dto.ViaCepResponseDto;
 import com.emakers.library_api.models.PersonModel;
 import com.emakers.library_api.models.UserRole;
 import com.emakers.library_api.repositores.PersonRepository;
+import com.emakers.library_api.service.ViaCepService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -24,6 +26,9 @@ public class PersonController {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private ViaCepService viaCepService;
+
     @Operation(summary = "Cadastra um novo Administrador", description = "Rota exclusiva para admins criarem" +
             " outros usuários com privilégios de administrador.")
     @PostMapping("/users/admin")
@@ -36,7 +41,16 @@ public class PersonController {
     @Operation(summary = "Cadastra um novo usuário", description = "Salva as informações de uma nova" +
             " pessoa no banco de dados.")
     @PostMapping("/users")
-    public ResponseEntity<PersonModel> savePerson(@RequestBody @Valid PersonRecordDto personRecordDto) {
+    public ResponseEntity<Object> savePerson(@RequestBody @Valid PersonRecordDto personRecordDto) {
+        try {
+            ViaCepResponseDto zipCode = viaCepService.checkCep(personRecordDto.zipCode());
+            if (zipCode == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided zip code does not exist.");
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
         var personModel = new PersonModel(personRecordDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(personRepository.save(personModel));
     }
