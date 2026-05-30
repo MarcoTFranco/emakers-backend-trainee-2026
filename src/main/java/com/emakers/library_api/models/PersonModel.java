@@ -73,6 +73,22 @@ public class PersonModel implements Serializable {
         return role;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public void setRole(UserRole role) {
         this.role = role;
     }
