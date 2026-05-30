@@ -3,7 +3,7 @@ package com.emakers.library_api.models;
 import com.emakers.library_api.dto.request.PersonRecordDto;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -36,12 +36,12 @@ public class PersonModel implements Serializable {
     public PersonModel() {
     }
 
-    public PersonModel(PersonRecordDto personRecordDto) {
+    public PersonModel(PersonRecordDto personRecordDto, PasswordEncoder passwordEncoder) {
         this.name = personRecordDto.name();
         this.cpf = personRecordDto.cpf();
         this.zipCode = personRecordDto.zipCode();
-        this.email = personRecordDto.email();
-        this.password = new BCryptPasswordEncoder().encode(personRecordDto.password());
+        this.email = personRecordDto.email().toLowerCase().trim();
+        this.password = passwordEncoder.encode(personRecordDto.password());
         this.role = UserRole.USER;
     }
 
@@ -77,11 +77,13 @@ public class PersonModel implements Serializable {
         this.role = role;
     }
 
-    public void updatePerson(@Valid PersonRecordDto personRecordDto) {
-        this.name = personRecordDto.name();
-        this.cpf = personRecordDto.cpf();
-        this.zipCode = personRecordDto.zipCode();
-        this.email = personRecordDto.email();
-        this.password = new BCryptPasswordEncoder().encode(personRecordDto.password());
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void updateProfile(String name, String zipCode, String email) {
+        this.name = name;
+        this.zipCode = zipCode;
+        this.email = email.toLowerCase().trim();
     }
 }

@@ -9,6 +9,7 @@ import com.emakers.library_api.repositores.BookRepository;
 import com.emakers.library_api.repositores.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -23,6 +24,9 @@ public class DatabaseSeeder implements CommandLineRunner {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void run(String... args) throws Exception {
         seedUsers();
@@ -31,18 +35,18 @@ public class DatabaseSeeder implements CommandLineRunner {
 
     private void seedUsers() {
         if (personRepository.count() == 0) {
-            PersonRecordDto adminDto = new PersonRecordDto("Super Admin", "000.000.000-00",
+            PersonRecordDto adminDto = new PersonRecordDto("Super Admin", "111.444.777-35",
                     "35500-000", "admin@emakers.com", "admin123");
-            PersonModel admin = new PersonModel(adminDto);
+            PersonModel admin = new PersonModel(adminDto, passwordEncoder);
             admin.setRole(UserRole.ADMIN);
 
-            PersonRecordDto leitorDto = new PersonRecordDto("Marco Túlio", "111.222.333-44",
+            PersonRecordDto leitorDto = new PersonRecordDto("Marco Túlio", "123.456.789-09",
                     "35500-130", "marco@ufla.br", "senha123");
-            PersonModel leitor = new PersonModel(leitorDto);
+            PersonModel leitor = new PersonModel(leitorDto, passwordEncoder);
 
-            PersonRecordDto leitor2Dto = new PersonRecordDto("João Silva", "999.888.777-66",
+            PersonRecordDto leitor2Dto = new PersonRecordDto("João Silva", "111.222.333-96",
                     "12345-678", "joao@exemplo.com", "senha123");
-            PersonModel leitor2 = new PersonModel(leitor2Dto);
+            PersonModel leitor2 = new PersonModel(leitor2Dto, passwordEncoder);
 
             personRepository.saveAll(List.of(admin, leitor, leitor2));
         }
