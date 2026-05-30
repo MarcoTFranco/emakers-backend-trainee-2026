@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface PersonRepository extends JpaRepository<PersonModel, UUID> {
     Optional<PersonModel> findByCpf(String cpf);
     Optional<PersonModel> findByEmail(String email);
+    boolean existsByEmail(String email);
+    boolean existsByCpf(String cpf);
 }

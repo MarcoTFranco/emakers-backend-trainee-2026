@@ -20,10 +20,12 @@ public class PersonModel implements Serializable {
 
     private String name;
 
+    @Column(unique = true, nullable = false, length = 14)
     private String cpf;
 
     private String zipCode;
 
+    @Column(unique = true, nullable = false)
     private String email;
 
     private String password;
