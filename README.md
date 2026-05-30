@@ -62,7 +62,7 @@ Certifique-se de ter instalado em sua máquina:
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SeuUsuario/library-api.git](https://github.com/SeuUsuario/library-api.git)
+    git clone https://github.com/MarcoTFranco/emakers-backend-trainee-2026.git
     cd library-api
     ```
 
