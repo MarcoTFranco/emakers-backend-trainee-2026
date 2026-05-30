@@ -27,9 +27,14 @@ services:
     ports:
       - "8080:8080"
     environment:
-
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/library_api
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+      # Credenciais do primeiro admin — defina no arquivo .env (nunca commite senhas reais)
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_CPF: ${ADMIN_CPF}
+      ADMIN_NAME: ${ADMIN_NAME:-Administrator}
+      ADMIN_CEP: ${ADMIN_CEP:-}
     depends_on:
       - db
