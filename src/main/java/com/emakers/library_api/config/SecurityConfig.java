@@ -39,21 +39,33 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(
                         auth -> auth
+                                // Rotas públicas
                                 .requestMatchers("/authenticate").permitAll()
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/users/admin").hasAuthority("SCOPE_ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/users").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/books/**").permitAll()
 
+                                // Livros — escrita é admin
                                 .requestMatchers(HttpMethod.POST, "/books").hasAuthority("SCOPE_ADMIN")
                                 .requestMatchers(HttpMethod.PUT, "/books/**").hasAuthority("SCOPE_ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/books/**").hasAuthority("SCOPE_ADMIN")
-                                .requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("SCOPE_ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("SCOPE_ADMIN")
-                                .requestMatchers("/loans/**").hasAuthority("SCOPE_ADMIN")
 
+                                // Usuários — rotas self-service ANTES dos wildcards admin
+                                .requestMatchers(HttpMethod.PUT, "/users/{id}/change-password").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/users/{id}").authenticated()
                                 .requestMatchers(HttpMethod.PUT, "/users/{id}").authenticated()
+
+                                // Usuários — rotas admin (wildcard cobre o restante)
+                                .requestMatchers(HttpMethod.POST, "/users/admin").hasAuthority("SCOPE_ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/users/**").hasAuthority("SCOPE_ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("SCOPE_ADMIN")
+
+                                // Empréstimos — usuário autenticado pode criar e devolver o próprio
+                                .requestMatchers(HttpMethod.POST, "/loans").authenticated()
+                                .requestMatchers(HttpMethod.DELETE, "/loans/{id}").authenticated()
+
+                                // Empréstimos — demais operações (listar todos, etc.) são admin
+                                .requestMatchers("/loans/**").hasAuthority("SCOPE_ADMIN")
 
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer(

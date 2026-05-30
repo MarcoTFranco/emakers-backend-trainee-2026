@@ -1,6 +1,8 @@
 package com.emakers.library_api.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-public record LoanRecordDto(@NotBlank String title, @NotBlank String cpf) {
+import java.util.UUID;
+
+public record LoanRecordDto(@NotNull UUID bookId, @NotNull UUID personId) {
 }

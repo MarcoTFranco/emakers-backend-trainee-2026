@@ -5,8 +5,10 @@ import com.emakers.library_api.dto.response.LoanResponseDto;
 import com.emakers.library_api.service.LoanService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -23,24 +25,20 @@ public class LoanController {
         this.loanService = loanService;
     }
 
-    @Operation(summary = "Realiza o empréstimo de um livro", description = "Cria um novo registro de empréstimo" +
-            " vinculando uma pessoa e um livro utilizando o CPF e o título do livro.")
-    @PostMapping()
-    public ResponseEntity<Object> bookLoan (@RequestBody LoanRecordDto loanRecordDto) {
-        Optional<LoanResponseDto> loanResponseDto = loanService.bookLoan(loanRecordDto);
-        return loanResponseDto.<ResponseEntity<Object>>map(responseDto -> ResponseEntity
-                .status(HttpStatus.CREATED).body(responseDto)).orElseGet(() -> ResponseEntity
-                .status(HttpStatus.NOT_FOUND).body("One or more information is invalid"));
+    @Operation(summary = "Realiza o empréstimo de um livro", description = "Cria um novo empréstimo vinculando pessoa e livro pelos seus UUIDs.")
+    @PostMapping
+    public ResponseEntity<Object> bookLoan(@RequestBody @Valid LoanRecordDto loanRecordDto, Authentication authentication) {
+        Optional<LoanResponseDto> result = loanService.bookLoan(loanRecordDto, authentication);
+        return result.<ResponseEntity<Object>>map(dto -> ResponseEntity.status(HttpStatus.CREATED).body(dto))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book or Person not found"));
     }
 
-    @Operation(summary = "Realiza a devolução de um livro", description = "Encerra um empréstimo ativo alterando seu" +
-            " status para inativo (soft delete) com base no ID do empréstimo.")
+    @Operation(summary = "Realiza a devolução de um livro", description = "Encerra um empréstimo ativo (soft delete) pelo ID do empréstimo.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteLoan(@PathVariable UUID id) {
-        boolean status = loanService.deleteLoan(id);
-        if (!status) {
+    public ResponseEntity<Object> deleteLoan(@PathVariable UUID id, Authentication authentication) {
+        if (!loanService.deleteLoan(id, authentication)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Loan Not Found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Delete successful");
+        return ResponseEntity.ok("Return successful");
     }
 }

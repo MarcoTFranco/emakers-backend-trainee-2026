@@ -1,9 +1,9 @@
 package com.emakers.library_api.dto.request;
 
+import com.emakers.library_api.validation.ValidCPF;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.br.CPF;
 
-public record PersonRecordDto(@NotBlank String name, @CPF @NotBlank String cpf, @NotBlank String zipCode,
+public record PersonRecordDto(@NotBlank String name, @ValidCPF @NotBlank String cpf, @NotBlank String zipCode,
                               @Email @NotBlank String email, @NotBlank String password) {
 }
