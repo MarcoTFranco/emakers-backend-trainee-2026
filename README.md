@@ -168,21 +168,15 @@ ADMIN_CEP=01310-100         # opcional
 > O `AdminInitializer` cria o admin automaticamente na primeira inicialização.
 > Nas execuções seguintes, se já existir um admin no banco, o passo é ignorado.
 
-**3. Compile o projeto**
-
-```bash
-# Windows
-.\mvnw clean package -DskipTests
-
-# Linux / macOS
-./mvnw clean package -DskipTests
-```
-
-**4. Suba a infraestrutura completa**
+**3. Suba a infraestrutura completa**
 
 ```bash
 docker compose up -d --build
 ```
+
+> O Dockerfile usa **multi-stage build**: o Maven compila o projeto dentro do próprio container.
+> Não é necessário rodar `./mvnw` antes — a compilação acontece automaticamente no build.
+> O `healthcheck` do banco garante que a API só inicia quando o PostgreSQL estiver pronto.
 
 A API estará disponível em `http://localhost:8080`.
 
@@ -229,6 +223,7 @@ O schema é gerenciado pelo Flyway. As migrations estão em `src/main/resources/
 | `V4` | Adiciona coluna `active` em `TB_LOANS` |
 | `V5` | Adiciona coluna `role` em `TB_PERSON` |
 | `V6` | Corrige tipo da coluna `publication_date` para `date` |
+| `V7` | Corrige tipos `CHAR→VARCHAR` nas colunas `cpf`, `zip_code` e `password` |
 
 ---
 
