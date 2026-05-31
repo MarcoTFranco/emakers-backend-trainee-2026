@@ -2,7 +2,6 @@ package com.emakers.library_api.models;
 
 import com.emakers.library_api.dto.request.PersonRecordDto;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.Serializable;
